@@ -1,26 +1,47 @@
 import React from 'react';
-import logo from './logo.svg';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import fire from './Fire'
 import './App.css';
+import Home from './Home';
+import LoginPage from './LoginPage';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component{
+  constructor () {
+    super()
+    this.state = {
+      name: 'Sara',
+      user: {}
+    }
+  }
+
+  componentDidMount() {
+    this.authListener();
+  }
+
+  authListener() {
+    fire.auth().onAuthStateChanged((user) =>{
+      //console.log(user);
+      if (user){
+        this.setState({user});
+        //localStorage.setItem('user',user.uid);
+      } else {
+        this.setState({ user : null });
+        //localStorage.removeItem('user');
+      }
+    });
+  }
+
+  clickedBtn = () => {
+    console.log('swag')
+  }
+
+  render () {
+    return (
+        <div>
+        {this.state.user ? (<Home/>):(<LoginPage/>)}
+        </div>
+    )
+  }
 }
 
 export default App;
